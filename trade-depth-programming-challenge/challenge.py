@@ -65,16 +65,77 @@ def process_message(message_size:int, data:object)->dict:
     message_decoder = msg_mapping.get(msg_type)
     
     return {k: decoder_mapping.get(k)(data.read(v)) for k,v in message_decoder.items()} 
+
+def process_order(orders:dict, trade_msg)->dict:
+    # check if symbol and price exist, modify qty 
+    # add symbol or price if doesn't exist
     
+    symbol = trade_msg.get('message').get('symbol')
+    price = trade_msg.get('message').get('price')
+    size = trade_msg.get('message').get('size')
+    
+    if symbol is None:
+        orders[symbol] = {price : size}
+
+    else:
+        orders = process_symbol_order(orders, trade_msg)
+    
+    return orders 
+
+def create_price_depth(input):
+    # 
+    pass
+
+def process_symbol_order(orders:dict, trade_msg):
+    # process symbol for order depending on buy or sale 
+    # add price and qty if doesn't exist
+    # modify qty if price exists
+    symbol = trade_msg.get('message').get('symbol')
+    price = trade_msg.get('message').get('price')
+    size = trade_msg.get('message').get('size')
+    side = trade_msg.get('message').get('side')
+    
+    if orders.get(symbol) is None:
+        orders[symbol] = {price : size}
+    
+    elif orders.get(symbol).get(price) is None:
+        orders[symbol][price] = size 
+        
+    else:
+        size = orders[symbol][price] 
+        if side == 'B':
+            orders[symbol][price] = size + trade_msg.get('message').get('size')
+        elif side == 'S':
+            orders[symbol][price] = size - trade_msg.get('message').get('size')
+    
+    return orders 
+
 with open(fname, "rb") as stream:
     message = []
+    orders = {}
+    
     while True:
         sequence_num = byte_to_int(stream.read(4))
         if sequence_num == 0:
             break
         message_size = byte_to_int(stream.read(4))
         message.append({'sequence': sequence_num,
-                        'message_size' : message_size})
+                        'message_size' : message_size,
+                        'message': process_message(message_size, stream)})
         
-        message.append(process_message(message_size, stream))
+        # add to orders
         
+        # compare current message to last state in price depth  
+        # can only compare from sequence 2 
+        
+        if sequence_num != 1:
+            process_order(orders, message[sequence_num - 1])
+        
+
+# for each sequence, {bids} {asks},
+# bids is sorted from highest to lowest
+# asks is sorted from lowest to highest
+# snapshot is a separate data structure
+# we only need to compare current state to last state 
+# each sequence could be a different symbol
+
