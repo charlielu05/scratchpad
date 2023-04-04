@@ -4,13 +4,6 @@
 ARG VARIANT="3.10-bullseye"
 FROM mcr.microsoft.com/vscode/devcontainers/python:0-${VARIANT}
 
-# install OCAML
-RUN wget https://github.com/ocaml/opam/releases/download/2.1.3/opam-2.1.3-x86_64-linux
-RUN sudo install opam-2.1.3-x86_64-linux /usr/local/bin/opam
-
-# install bwrap dependency 
-RUN sudo apt-get update -y
-RUN sudo apt-get install -y bubblewrap
 # [Optional] If your pip requirements rarely change, uncomment this section to add them to the image.
 # COPY requirements.txt /tmp/pip-tmp/
 # RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
