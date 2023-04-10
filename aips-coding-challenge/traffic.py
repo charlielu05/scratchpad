@@ -12,29 +12,15 @@ class trafficCount:
         # sort by count
         self.sort_index = self.count
 
-# read lines
-with open('test-input.txt') as f:
-    lines = f.readlines()
-    
-# pre-processing
-dt = [entry.split() for entry in lines]
-
 def convert_to_data(input: list[str,str]):
     return trafficCount(time = datetime.fromisoformat(input[0]) ,
                         count = int(input[1]))
-
-# convert to data structure
-data = [convert_to_data(x) for x in dt]
 
 def return_total_cars(data = list[trafficCount])->int:
     return sum(tc.count
                for tc
                in data)
     
-# sum of cars
-total_cars = return_total_cars(data)
-print(f"Total cars seen: {total_cars}")
-
 # sum of cars for day
 def day_sum(inputs: list[trafficCount]):
     output_dict = {}
@@ -46,22 +32,9 @@ def day_sum(inputs: list[trafficCount]):
         
     return output_dict
 
-total_cars_per_day = day_sum(data)
-
-print("Date sum:")
-for date, count in total_cars_per_day.items():
-    print(date, count)
-
 def return_top_three_half_hours(data: list[trafficCount])-> list[trafficCount]:
     return sorted(data, reverse=True)[:3]
 
-# the top 3 half hours with most cars
-top_3 = return_top_three_half_hours(data)
-
-print("Top 3 half hours with most cars:")
-for record in top_3:
-    print(record.time.isoformat(), record.count)
-    
 # the 1.5 hours periods with least cars (3 contiguous half hour records)
 # compare current to 2 idx ahead, if dif is not 1 hour, skip to 1 idx ahead
 # else sum current to 2 idx ahead, compare to current least, if lower then overwrite else move 1 idx up
@@ -77,5 +50,35 @@ def least_cars_ninety_mins(inputs: list[trafficCount]):
                 
     return least_cars_timestamps, least_cars
 
-print("1.5 hour period with least cars")
-print(least_cars_ninety_mins(data))
+
+if __name__ == "__main__":
+    # read lines
+    with open('test-input.txt') as f:
+        lines = f.readlines()
+        
+    # pre-processing
+    dt = [entry.split() for entry in lines]
+
+    # convert to data structure
+    data = [convert_to_data(x) for x in dt]
+    
+    # sum of cars
+    total_cars = return_total_cars(data)
+    print(f"Total cars seen: {total_cars}")
+    
+    total_cars_per_day = day_sum(data)
+
+    print("Date sum:")
+    for date, count in total_cars_per_day.items():
+        print(date, count)
+    
+    # the top 3 half hours with most cars
+    top_3 = return_top_three_half_hours(data)
+
+    print("Top 3 half hours with most cars:")
+    for record in top_3:
+        print(record.time.isoformat(), record.count)
+    
+    
+    print("1.5 hour period with least cars")
+    print(least_cars_ninety_mins(data))

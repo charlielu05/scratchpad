@@ -9,10 +9,13 @@ python-env:
 	pip3 install -r requirements.txt
 	pip3 freeze > requirements.txt
 
-python-test:
+python-test: python-env
 	source .aips/bin/activate
 	python -m pytest tests/
 
+python-run: python-env
+	source .aips/bin/activate
+	python traffic.py
 
 .PHONY: *
 .ONESHELL:
