@@ -23,3 +23,33 @@ let concat delimiter los =
     | hd :: [] -> hd
     | hd :: tl -> hd ^ delimiter ^ helper tl
   in helper los);;
+
+(* 4.5.3 *)
+(* function to return the height of the binary tree *)
+(* height of binary tree is the longest path from the root node to any leaf in the tree *)
+type 'a bin_tree = 
+  | Leaf
+  | Node of 'a bin_tree * 'a * 'a bin_tree;;
+
+let rec height t = 
+  match t with 
+  | Leaf -> 0
+  | Node (l, _, r) -> 1 + max (height l) (height r);;
+
+(* 4.5.4 *)
+(* find the predecessor of natural number *)
+(* function that takes n of nat and returns its predecessor *)
+type nat = Zero | Succ of nat;;
+
+let rec pred nats = 
+  match nats with 
+  | Zero -> None
+  | Succ x -> Some x;; 
+
+(* 4.5.5 *)
+(* add two natural numbers *)
+(* add two nat types, example: add Zero Zero = Zero, add Zero (Succ Zero) = Succ Zero, add (Succ Zero) (Succ Zero) = Succ(Succ Zero) *)
+let rec add l r = 
+  match r with 
+  | Zero -> l
+  | Succ x -> add (Succ l) x;;

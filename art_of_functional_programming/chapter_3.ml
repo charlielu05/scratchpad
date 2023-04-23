@@ -15,7 +15,7 @@ let rec fib n = if n <= 0 then 0 else if n <= 2 then 1 else fib (n - 2) + fib (n
 (* Super Fib, use tail recursive *)
 
 let super_fib n = 
-  let rec helper a b m = if m >= n then a 
+  let rec helper a b m = if m >= n then a  
   else helper b (a + b) (m + 1) in 
   helper 0 1 0;;
 
