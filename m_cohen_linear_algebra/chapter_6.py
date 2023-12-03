@@ -41,8 +41,8 @@ assert (np.diag(standard_multiply) == np.diag(hadamard_multiply)).all()
 # numbers, and then explain why you get this result.
 
 A = np.random.randn(4,4)
-C1 = (A.T + A) / 2
-C2 = A.T@A
+C1 = (A.T + A) / 2 # additive method
+C2 = A.T@A # multiplicative method
 
 # check symmetry
 assert (C1.T == C1).all()
