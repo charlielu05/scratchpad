@@ -42,3 +42,15 @@ if __name__ == "__main__":
     from functools import reduce
 
     print(reduce(lambda x, y: x * y, wins))
+
+    # part 2
+    # actually a single race
+    # combine the time string together into one string
+    # combine the distances together into one string
+
+    total_time_str = int("".join(map(str, time)))
+    total_distance_str = int("".join(map(str, distances)))
+
+    wins_p2 = []
+
+    wins_p2.append(winning_times(total_time_str, total_distance_str))
