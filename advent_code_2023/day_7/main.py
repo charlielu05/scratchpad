@@ -93,6 +93,61 @@ class Hand:
             return "high card"
 
 
+@dataclass
+class Hand2(Hand):
+    def type_of_hand(self):
+        none_joker_hand = {k: v for k, v in self.hand_counts.items() if k != "J"}
+
+        # if hand has five of the same type
+        if (
+            max(self.hand_counts.values()) == 5
+            or max(none_joker_hand.values()) + self.hand_counts["J"] >= 5
+        ):
+            return "five of a kind"
+
+        # if hand has four of the same type
+        elif (
+            max(self.hand_counts.values()) == 4
+            or max(none_joker_hand.values()) + self.hand_counts["J"] >= 4
+        ):
+            return "four of a kind"
+
+        # if hand has full house
+        elif (
+            3 in self.hand_counts.values()
+            and 2 in self.hand_counts.values()
+            or list(none_joker_hand.values()).count(2) == 2
+            and self.hand_counts["J"] == 1
+        ):
+            return "full house"
+
+        # if hand has three of the same type
+        elif (
+            max(self.hand_counts.values()) == 3
+            or self.hand_counts["J"] == 2
+            or max(none_joker_hand.values()) + self.hand_counts["J"] >= 3
+        ):
+            return "three of a kind"
+
+        # if hand has two pairs
+        elif (
+            list(self.hand_counts.values()).count(2) == 2
+            or self.hand_counts["J"] == 1
+            and list(none_joker_hand.values()).count(2) == 1
+        ):
+            return "two pairs"
+
+        # if hand has one pair
+        elif (
+            list(self.hand_counts.values()).count(2) == 1 or self.hand_counts["J"] == 1
+        ):
+            return "one pair"
+
+        # if hand has high card
+        else:
+            return "high card"
+
+
 if __name__ == "__main__":
     file_path = Path(__file__).parent / "full_input.txt"
     # open test file
@@ -107,7 +162,17 @@ if __name__ == "__main__":
         cards = [Card(card, DECK.index(card)) for card in hand]
         hands.append(Hand(cards, int(bid)))
 
+    total_winnings = sum(hand.bid * (i + 1) for i, hand in enumerate(sorted(hands)))
+
+    # part two , including jokers
+    # convert each line into a Hand object
+    hands = []
+    for line in lines:
+        hand, bid = line.split(" ")
+        cards = [Card(card, DECK_PART_TWO.index(card)) for card in hand]
+        hands.append(Hand2(cards, int(bid)))
+
     for hand in hands:
-        print(hand.hand_type)
+        print(hand.type_of_hand())
 
     total_winnings = sum(hand.bid * (i + 1) for i, hand in enumerate(sorted(hands)))
