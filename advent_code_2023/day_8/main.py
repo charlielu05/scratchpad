@@ -48,3 +48,7 @@ if __name__ == "__main__":
                 break
 
     print(f"Number of steps: {STEP_COUNT}")
+
+    # part two
+    # simultaneously start on every node that ends with A
+    # how many steps does it take before you're only on nodes that end with Z
