@@ -117,18 +117,19 @@ class Server:
     async def handle_connection(self, connection, loop, app):
         try:
             data = await loop.sock_recv(connection, 1024)
-            print(f"data received: {data}")
+            print(f"\n data received: {data} \n")
 
             request_object = parse_http(data)
-            print(f"request_object:{request_object}")
+            print(f"\n request_object:{request_object} \n")
             
             asgi = ASGI(request_object)
-            print(asgi.scope)
+            print(f"\n asgi.scope:{asgi.scope} \n")
             
             asyncio.create_task(asgi.run(app))
             await asgi.response_event.wait()
+            print(f"\n asgi.response: {asgi.response} \n")
             http_response = serialize_http_response(asgi.response)
-            print(f"http_response: {http_response}")
+            print(f"\n http_response: {http_response} \n")
             await loop.sock_sendall(connection, http_response)
 
         except Exception as e:
