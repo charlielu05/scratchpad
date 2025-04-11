@@ -1,6 +1,6 @@
 import socket
 
-HTTP_REQUEST = b'GET /foo HTTP/1.1\r\nHost: localhost:8000\r\nUser-Agent: python/3.10.12\r\nAccept: */*\r\n\r\n'
+HTTP_REQUEST = b'GET / HTTP/1.1\r\nHost: localhost:8000\r\nUser-Agent: python/3.10.12\r\nAccept: */*\r\n\r\n'
 
 HOST = '127.0.0.1'    # The remote host
 PORT = 8000              # The same port as used by the server
